@@ -1,16 +1,15 @@
 // Counter: useState
 // 🐨 you'll need to add {useState} to this import statement
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 
 // 💰 the `useState` hook allows you to use state
 // from within function components in react:
 // const [name, setName] = useState('Angela')
 
 function Counter() {
-  const [count, setCount] = React.useState(0)
-  // 🐨 you'll call useState here to get count and setCount
-  // 🐨 render the count here and add an onClick handler that increments the count
-  return <button onClick={() => setCount(count +1)}>{count}</button>
+  const [count, setCount] = useState(0)
+  const incrementCount = () => setCount(count + 1)
+  return <button onClick={incrementCount}>{count}</button>
 }
 
 // Don't make changes to the Usage component. It's here to show you how your
