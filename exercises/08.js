@@ -1,5 +1,5 @@
 // Stopwatch: useReducer (a la setState)
-import React, {useReducer, useEffect, useRef} from 'react'
+import React, {useReducer, useEffect, useRef} from 'react';
 
 const buttonStyles = {
   border: '1px solid #ccc',
@@ -10,45 +10,17 @@ const buttonStyles = {
   width: 200,
 }
 
-// 🐨 simplify this reducer to accept two state objects
-// and return a new one that performs a shallow merge.
-// 💰 here's how to perform a shallow merge:
-// const obj1 = {a: 'b', c: 'd'}
-// const obj2 = {c: 'e', f: 'g'}
-// console.log({...obj1, ...obj2}) // {a: 'b', c: 'e', f: 'g'}
-// 💰 when done correctly, this function should be no longer than 3 lines.
-// and could be done in one line if you make it an arrow function.
-function reducer(state, action) {
-  switch (action.type) {
-    case 'LAPSE':
-      return {
-        ...state,
-        lapse: action.now - action.startTime,
-      }
-    case 'TOGGLE_RUNNING':
-      return {
-        ...state,
-        running: !state.running,
-      }
-    case 'CLEAR':
-      return {
-        ...state,
-        running: false,
-        lapse: 0,
-      }
-    default:
-      break
-  }
+function reducer(currentState, newState) {
+  const { ...currentState, ...newState }
 }
+  
 
 function Stopwatch() {
-  // 🐨 2. rename `dispatch` to `setState`
-  const [{running, lapse}, dispatch] = useReducer(reducer, {
-    running: false,
-    lapse: 0,
-  })
-  const timerRef = useRef(null)
-
+    const [{running, lapse}, setState] = useReducer(reducer, {
+      running: false,
+      lapse: 0,
+    })
+    const timerRef = useRef(null)
   useEffect(() => () => clearInterval(timerRef.current), [])
 
   function handleRunClick() {
@@ -58,17 +30,17 @@ function Stopwatch() {
       const startTime = Date.now() - lapse
       timerRef.current = setInterval(() => {
         // 🐨 3. call `setState` instead
-        dispatch({type: 'LAPSE', now: Date.now(), startTime})
+        setState({lapse: Date.now() - startTime})
       }, 0)
     }
     // 🐨 4. call `setState` instead
-    dispatch({type: 'TOGGLE_RUNNING'})
+    setState({running: !running})
   }
 
   function handleClearClick() {
     clearInterval(timerRef.current)
     // 🐨 5. call `setState` instead
-    dispatch({type: 'CLEAR'})
+    setState({running: false, lapse: 0})
   }
 
   return (
