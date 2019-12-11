@@ -11,23 +11,27 @@ const buttonStyles = {
   width: 200,
 }
 
-// 🐨 2. create a function called reducer
-// 💰 function reducer(state, action) {}
-// The contents of this function can be whatever you would like.
-// but here's an example of one of the state transitions that would work well:
-// function reducer(state, action) {
-//   switch (action.type) {
-//     // handle more cases here...
-//     case 'CLEAR':
-//       return {
-//         ...state,
-//         running: false,
-//         lapse: 0,
-//       }
-//     default:
-//       break;
-//   }
-// }
+function reducer(state, action) {
+  switch (action.type) {
+    case 'LAPSE':
+      return {
+        ...state,
+        lapse: action.now - action.startTime,
+      }
+    case 'TOGGLE_RUNNING':
+      return {
+        ...state,
+        running: !state.running,
+      }
+    case 'CLEAR':
+      return {
+        ...state,
+        running: false,
+        lapse: 0,
+      }
+    default:
+      break
+  }
 
 function Stopwatch() {
   // 🐨 3. swap these `useState` calls with a single `useReducer` call
