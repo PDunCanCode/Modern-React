@@ -32,9 +32,9 @@ function Stopwatch() {
   }
 
   function handleClearClick() {
-    // 🐨 9. clear the interval with the intervalId you get back from setInterval
-    // 🐨 10. set lapse to 0
-    // 🐨 11. set running to false
+    clearInterval(timerRef.current)
+    setLapse(0)
+    setRunning(false)
   }
 
   return (
