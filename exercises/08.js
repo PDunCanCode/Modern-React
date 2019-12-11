@@ -11,7 +11,7 @@ const buttonStyles = {
 }
 
 function reducer(currentState, newState) {
-  const { ...currentState, ...newState }
+  return { ...currentState, ...newState }
 }
   
 
