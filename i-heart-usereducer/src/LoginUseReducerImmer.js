@@ -1,47 +1,41 @@
-import React, {useState, useReducer} from 'react'
-import produce from 'immer'
-import {login} from './utils'
 
-function loginReducer(state, action) {
+import React, { useReducer } from 'react';
+import produce from 'immer';
+// import { useImmerReducer } from 'use-immer';
+import { login } from './utils';
+
+function loginReducer(draft, action) {
   switch (action.type) {
     case 'field': {
-      return {
-        ...state,
-        [action.fieldName]: action.payload,
-      }
+      draft[action.fieldName] = action.payload;
+      return;
     }
     case 'login': {
-      return {
-        ...state,
-        error: '',
-        isLoading: true,
-      }
+      draft.error = '';
+      draft.isLoading = true;
+      return;
     }
     case 'success': {
-      return {
-        ...state,
-        isLoggedIn: true,
-        isLoading: false,
-      }
+      draft.isLoggedIn = true;
+      draft.isLoading = false;
+      draft.username = '';
+      draft.password = '';
+      return;
     }
     case 'error': {
-      return {
-        ...state,
-        error: 'Incorrect username or password!',
-        isLoggedIn: false,
-        isLoading: false,
-        username: '',
-        password: '',
-      }
+      draft.error = 'Incorrect username or password!';
+      draft.isLoggedIn = false;
+      draft.isLoading = false;
+      draft.username = '';
+      draft.password = '';
+      return;
     }
     case 'logOut': {
-      return {
-        ...state,
-        isLoggedIn: false,
-      }
+      draft.isLoggedIn = false;
+      return;
     }
     default:
-      return state
+      return;
   }
 }
 
@@ -51,24 +45,33 @@ const initialState = {
   isLoading: false,
   error: '',
   isLoggedIn: false,
-}
+};
 
-export default function LoginUseReducer() {
-  const [state, dispatch] = useReducer(loginReducer, initialState)
-  const {username, password, isLoading, error, isLoggedIn} = state
+const curriedLoginReducer = produce(loginReducer);
+
+// const curriedLoginReducerFake = (state, ...args) => {
+//   return produce(state, (draft) => {
+//     loginReducer(state, ...args);
+//   })
+// }
+
+export default function LoginUseState() {
+  const [state, dispatch] = useReducer(curriedLoginReducer, initialState);
+  // const [state, dispatch] = useImmerReducer(loginReducer, initialState);
+  const { username, password, isLoading, error, isLoggedIn } = state;
 
   const onSubmit = async e => {
-    e.preventDefault()
+    e.preventDefault();
 
-    dispatch({type: 'login'})
+    dispatch({ type: 'login' });
 
     try {
-      await login({username, password})
-      dispatch({type: 'success'})
+      await login({ username, password });
+      dispatch({ type: 'success' });
     } catch (error) {
-      dispatch({type: 'error'})
+      dispatch({ type: 'error' });
     }
-  }
+  };
 
   return (
     <div className="App">
@@ -76,7 +79,9 @@ export default function LoginUseReducer() {
         {isLoggedIn ? (
           <>
             <h1>Welcome {username}!</h1>
-            <button onClick={() => dispatch({type: 'logOut'})}>Log Out</button>
+            <button onClick={() => dispatch({ type: 'logOut' })}>
+              Log Out
+            </button>
           </>
         ) : (
           <form className="form" onSubmit={onSubmit}>
@@ -114,5 +119,5 @@ export default function LoginUseReducer() {
         )}
       </div>
     </div>
-  )
+  );
 }
